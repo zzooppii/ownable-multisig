@@ -34,8 +34,6 @@ contract MultiSigWallet {
     );
 
     address public master;
-    mapping(address => bool) public isMaster;
-
     address[] public owners;
     mapping(address => bool) public isOwner;
 
@@ -55,7 +53,7 @@ contract MultiSigWallet {
     Transaction[] public transactions;
 
     modifier onlyMaster() {
-        require(isMaster[msg.sender], "not master");
+        require(master == msg.sender, "not master");
         _;
     }
 
@@ -88,7 +86,6 @@ contract MultiSigWallet {
         );
 
         master = _owners[0];
-        isMaster[_owners[0]] = true;
 
         for (uint i = 0; i < _owners.length; i++) {
             address owner = _owners[i];
@@ -121,8 +118,6 @@ contract MultiSigWallet {
 
     function changeMaster(address _newMaster) public onlyMaster {
         master = _newMaster;
-        isMaster[_newMaster] = true;
-        isMaster[msg.sender] = false;
 
         emit ChangeMaster(msg.sender, _newMaster);
     }
