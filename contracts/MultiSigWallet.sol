@@ -128,6 +128,14 @@ contract MultiSigWallet {
         emit WithdrawToken(msg.sender, _token, _amount);
     }
 
+     function withdrawEther(
+        address account,
+        uint256 value
+    ) external onlyMaster {
+        require(address(this).balance >= value, "contract don't have value");
+        payable(account).transfer(value);
+    }
+
     function submitTransaction(
         address _to,
         uint _value,
