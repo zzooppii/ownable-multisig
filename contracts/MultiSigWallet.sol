@@ -72,11 +72,6 @@ contract MultiSigWallet {
         _;
     }
 
-    modifier notConfirmed(uint _txIndex) {
-        require(!isConfirmed[_txIndex][msg.sender], "tx already confirmed");
-        _;
-    }
-
     constructor(address[] memory _owners, uint _numConfirmationsRequired) {
         require(_owners.length > 0, "owners required");
         require(
@@ -161,7 +156,8 @@ contract MultiSigWallet {
 
     function confirmTransaction(
         uint _txIndex
-    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) notConfirmed(_txIndex) {
+    ) public onlyOwner txExists(_txIndex) notExecuted(_txIndex) {
+        require(!isConfirmed[_txIndex][msg.sender], "tx already confirmed");
         Transaction storage transaction = transactions[_txIndex];
         transaction.numConfirmations += 1;
         isConfirmed[_txIndex][msg.sender] = true;
