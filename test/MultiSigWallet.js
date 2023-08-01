@@ -56,9 +56,14 @@ describe("Multisig", function () {
         expect(await multisig.isOwner(owner3)).to.equal(true);
     });
 
+    // it("Should first account be a master", async function () {
+    //     let {multisig, owner1, owner2, owner3} = await loadFixture(deployMultisigFixture);
+    //     expect(await multisig.isMaster(owner1)).to.equal(true);
+    // });
+
     it("Should first account be a master", async function () {
         let {multisig, owner1, owner2, owner3} = await loadFixture(deployMultisigFixture);
-        expect(await multisig.isMaster(owner1)).to.equal(true);
+        expect(await multisig.master()).to.equal(owner1.address);
     });
 
     it("Should one of owner be changed", async function () {
@@ -91,7 +96,7 @@ describe("Multisig", function () {
         let signers = await ethers.getSigners();
         let owner4 = signers[3]; //0x90F79bf6EB2c4f870365E785982E1f101E93b906
         await multisig.changeMaster(owner4);
-        expect(await multisig.isMaster(owner4)).to.equal(true);
+        expect(await multisig.master()).to.equal(owner4.address);
     });
 
     it("Can Owner submit transaction and submitted data is correct", async function () {
